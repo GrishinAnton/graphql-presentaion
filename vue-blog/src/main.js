@@ -1,5 +1,13 @@
 import Vue from 'vue'
-import App from './App.vue'
+import App from "./App.vue";
+import ElementUI from "element-ui";
+import locale from "element-ui/lib/locale/lang/ru-RU";
+
+import "@/assets/base.scss"
+import "element-ui/lib/theme-chalk/index.css";
+
+
+Vue.use(ElementUI, { locale });
 
 Vue.config.productionTip = false
 

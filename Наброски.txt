@@ -1,0 +1,145 @@
+1. Язык
+    Это язык, который используется для взаимодействия с БД. В частности с сервером. А откуда сервер берет данные - это уже не работа GraphQl. Данные могут браться с разных мест и стекаться в GraphQl
+2. Среда
+    Среда выполнения. Сам graphql принимает запрос. Разбивает его на части. Смотрит, что нужно. Правильно ли сформирован запрос. Потом данные собираются с внешнего источника и отправляются обратно к клиенту.
+
+3. Главная разница с REST
+
+Урлы для REST запросов
+/api/posts/ - все посты
+/api/posts/1/ - id поста
+/api/posts/1/comments - комментарии поста
+
+/api/users/1/posts/1/comments - комментарии одного поста конкретного пользователя
+
+Куча эндпоинтов
+query string
+/api/posts/1?fields=id,title - id поста и заголовок
+{
+    "id": 1,
+    "title": "Знакомство с GraphQl"
+}
+/api/posts/1?fields=id,title,author - id поста, заголовок и автор
+{
+    "id": 1,
+    "title": "Знакомство с GraphQl",
+    "author": 42
+}
+/api/autors/43
+{
+    "id": 42, 
+    "firstname": "Antom",
+    "lastname": "Grishin"
+}
+---
+{
+    "id": 1,
+    "title": "Знакомство с GraphQl",
+    "author": {
+        "id": 42, 
+        "firstname": "Antom",
+        "lastname": "Grishin"
+    }
+}
+Для получения сделали два запроса. Простая ситуация
+
+
+Как данный запрос будет выглядеть в GraphQl?
+query {
+    posts(id: 1) {
+        id
+        title
+        author {
+            firstname
+            lastname
+        }
+    }
+}
+
+
+
+POST
+/graphql
+
+
+query - запрос
+mutation - изменения
+
+
+query
+query {
+    viewer {
+        login
+        name
+        email
+    }
+}
+
+alisas
+query {
+    graphql: repository(owner: "facebook", name: "graphql") {
+        name
+    description
+    createdAt
+    id
+    }
+
+    react: repository(owner: "facebook", name: "react") {
+        name
+    }
+}
+
+fragment
+
+query {
+    graphql: repository(owner: "facebook", name: "graphql") {
+        ...repoDetails
+    }
+
+    react: repository(owner: "facebook", name: "react") {
+        ...repoDetails
+    }
+}
+
+fragment repoDetails on repository {
+    name
+    description
+    createdAt
+    id
+}
+
+
+Название запроса
+query GetRepos {
+    graphql: repository(owner: "facebook", name: "graphql") {
+        name
+    description
+    createdAt
+    id
+    }
+
+    react: repository(owner: "facebook", name: "react") {
+        name
+    }
+}
+
+
+Переменные
+query GetRepos($owner: String!, $name: String!) {
+    graphql: repository(owner: $owner, name: $name) {
+        name
+    description
+    createdAt
+    id
+    }
+
+    react: repository(owner: "facebook", name: "react") {
+        name
+    }
+}
+
+query-json
+{
+    "owner": "facebook",
+    "name": "react"
+}
