@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <Catalog msg="Welcome to Your Vue.js App"/>
+    <Catalog/>
   </div>
 </template>
 
 <script>
-import Catalog from './components/Catalog.vue'
+import Catalog from '@/components/catalog/Catalog.vue'
 
 export default {
   components: {
@@ -13,5 +13,3 @@ export default {
   }
 }
 </script>
-
-

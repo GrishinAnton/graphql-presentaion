@@ -45,9 +45,9 @@ query string
 
 
 Как данный запрос будет выглядеть в GraphQl?
-query {
-    posts(id: 1) {
-        id
+query { - запрос
+    posts(id: 1) { - название запроса
+        id - какие поля нам нужны
         title
         author {
             firstname
@@ -55,33 +55,146 @@ query {
         }
     }
 }
+Плюсы данного запроса. API возвращает все в одном запросе. Все что нужно и не нужно. GraphQl возвращает только то, что запросили. Это одно из преимуществ GraphQl. Это дает возможность формировать в запросе только необходимую информацию, формировать запросы с разных устройств за необходимыми данными. 
 
 
+Как работает GraphQl?
 
-POST
+Схема по протоколу REST - запрос на сервер, данные с БД, возврат данных обратно на клиент. 
+Схема по GraphQl - вместо обчного сервера - сервер GraphQl - он получает запрос от клиента, отправляет на сервер и возвращает обратно на клиент. 
+
+POST HTTP
 /graphql
 
+GET запрос отправляется в строке 
+POST запрос отправляется:
+fetch('url', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json' - есть свой тип контента /graphql
+    },
+    body: JSON.stringify({ - запрос можно отправить в теле запроса
+        query:`
+            {
+                posts(id: 1) {
+                    id
+                    title
+                    author {
+                        firstname
+                        lastname
+                    }
+                }
+            }
+        `
+    })
+})
+
+
+Таким образом GraphQl - это посредник между клиентом и сервером. Которые предоставляет единый интерфейс для различных устройств. 
+
+
+Основные термины
+query - запрос
+    Мы указываем то, что хотим получить в запросе. Сам запрсо состоит из полей Field - posts, id, title, author
+    
+Type - типы данных
+Перед тем, как отправлять данные на сервер, серверу надо "объяснить" что мы от него хотим. 
+Для этого формируются типы данных. Наприме тип данных POST. Состоит из примитивных типов данных и составных. Примитивные типы данных: строка, булеан, составные: объект, массив.
+
+type Post { - свойсва типов данных
+    id: ID! - обязательное поле - примитивный тип данных. Специальный тип данных ID
+    title: String!
+    content: String
+    author: Author! - составной тип данных.
+    status: Status! - составной тип данных.
+    comments: [Comment]! - составной тип данных.
+}
+
+type Author {
+    id: ID!
+    firstname: String!
+    lastname: Stirng!
+}
+
+Если нам нужны простые типы данных, то не обязательно составлять сложный запрос. Можно составить енумирацию данных enum
+enum Status {
+    DRAFT
+    PUBLISHED
+    ARCHIVED
+} - строки в сохраняемом объекте
+
+Подробнее, что такое Scalar and enum
+
+
+
+
+mutation - изменения
+Изменение данных put, delet, post, puth
+
+mutaton { запрос на изменения
+    createPost(inout: { - название изменения - создаем пост. Аргумент input
+        title: "Знакомство с GraphQl"
+        content: "..."
+        status: DRAFT
+        authot: {
+            firstname: "Anton"
+            lastname: "Grishin"
+            status: DRAFT
+        }
+    })
+}
+
+
+Основные типы данных: запрос (query), типы (type), изменения (mutation)
+
+
+Работа с GraphiQl
 
 query - запрос
-mutation - изменения
 
-
-query
 query {
-    viewer {
+    viewer { - если это составное свойство, то обязательно надо указывать поля, которые нужны
         login
         name
         email
     }
 }
 
-alisas
+вложенные свойства
 query {
-    graphql: repository(owner: "facebook", name: "graphql") {
+    viewer {
+        gists(first: 10) { - агрумент - первые 10 гистов
+            totalCount
+            nodes {
+                id
+                name
+                description
+                isPublic
+            }
+        }
+    }
+}
+
+ERRORS
+В отличие от REST api в GraphiQl нет кодов ошибок. Вместо этого возвращается сообщение об ошибке. - НАписать об этом больше
+
+
+query {
+    repository(owner: "facebook", name: "graphql") { - название запроса и аргументы
         name
-    description
-    createdAt
-    id
+    }
+}
+
+
+
+
+alisas - используется, так как в json нельзя, чтобы было два одинаковых названия. 
+query {
+    graphql: repository(owner: "facebook", name: "graphql") { - имя запроса, которое будет в возвращаемом свойстве объекта
+        name
+        description
+        createdAt
+        id
     }
 
     react: repository(owner: "facebook", name: "react") {
@@ -89,7 +202,10 @@ query {
     }
 }
 
-fragment
+
+
+
+fragment - чтобы не копировать одинаковые данные для запроса используется фрагмент
 
 query {
     graphql: repository(owner: "facebook", name: "graphql") {
@@ -101,7 +217,7 @@ query {
     }
 }
 
-fragment repoDetails on repository {
+fragment repoDetails on Repository {// repoDetails - название, repository - тип объекта
     name
     description
     createdAt
@@ -110,12 +226,16 @@ fragment repoDetails on repository {
 
 
 Название запроса
+Зачем? 
+На сервере будет понятно, в каком запросе произошла ошибка. 
+Хорошая практика
+Можно указать переменные для запроса
 query GetRepos {
     graphql: repository(owner: "facebook", name: "graphql") {
         name
-    description
-    createdAt
-    id
+        description
+        createdAt
+        id
     }
 
     react: repository(owner: "facebook", name: "react") {
@@ -125,16 +245,13 @@ query GetRepos {
 
 
 Переменные
-query GetRepos($owner: String!, $name: String!) {
-    graphql: repository(owner: $owner, name: $name) {
+Данные переменные отправляются вместе с запросом.
+query GetRepos($owner: String!, $name: String!) { - переменные. Для определение используется знак $. Потом тип данных для этой переменной
+    repository(owner: $owner, name: $name) {
         name
-    description
-    createdAt
-    id
-    }
-
-    react: repository(owner: "facebook", name: "react") {
-        name
+        description
+        createdAt
+        id
     }
 }
 
@@ -143,3 +260,14 @@ query-json
     "owner": "facebook",
     "name": "react"
 }
+
+
+
+Директива
+Испольщуется в двух случая. 1. Если указать серверу возвращать значение или нет по условию. 2. Можно пропустить какие-то значения. Например пропустить первые 5. include skip
+
+
+
+
+
+Мутации

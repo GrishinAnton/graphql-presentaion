@@ -1,0 +1,41 @@
+.logo
+    max-width: 150px
+    height: auto
+    a
+        display: inline-block
+
+    
+    
+    
+$color-time: 12s
+$step: $color-time/4
+
+stop 
+    animation: colors $color-time infinite
+
+
+.stop-2 
+    animation-delay: -$step
+
+.stop-3 
+    animation-delay: -$step*2
+
+
+@keyframes colors 
+    15% 
+        stop-color: crimson
+    
+    30% 
+        stop-color: gold
+    
+    45% 
+        stop-color: teal
+    
+    60% 
+        stop-color: yellowgreen
+    
+    75% 
+        stop-color: orangered
+    
+    90% 
+        stop-color: purple
