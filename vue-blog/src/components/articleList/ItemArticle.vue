@@ -4,13 +4,16 @@
             <img :src="data.imgUrl" alt="Eye">
         </div>
         <div class="article-content">
-            <h2 class="article-title"><a :href="data.link">{{ data.title }}</a></h2>
+            <h2 class="article-title">
+                <router-link :to="{ name: 'article', params: { id: data.id } }">{{ data.title }}</router-link>
+            </h2>
             <p class="aarticle-description">{{ data.description }}</p>
         </div>
     </article>
 </template>
 
 <script>
+
 export default {
     props: {
         data: {

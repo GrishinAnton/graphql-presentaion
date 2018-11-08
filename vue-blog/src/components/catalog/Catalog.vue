@@ -17,13 +17,12 @@
 
         <section class="pagination">
 
-          <el-pagination
+          <!-- <el-pagination
             background
             layout="prev, pager, next"
             :page-size="1"
             :total="2">
-          </el-pagination>
-		  
+          </el-pagination>		   -->
         </section>
       </el-main>
     </el-container>
@@ -38,8 +37,8 @@ import mnu from '@/components/menu/Menu.vue'
 export default {
   components: {
     logo,
-	itemsArticle,
-	mnu
+    itemsArticle,
+    mnu
   }
 }
 </script>

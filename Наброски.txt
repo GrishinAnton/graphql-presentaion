@@ -271,3 +271,14 @@ query-json
 
 
 Мутации
+
+
+
+
+2-я часть
+Ставим express
+Ставим nodemon
+Делаем api 
+
+npm i graphql
+npm i express-graphql

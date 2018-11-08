@@ -16,7 +16,7 @@ module.exports = buildSchema(`
     enum Status {
         COMPLETED
         UNCOMPLETED
-    }
+    }    
 
     type Query {
         todo(id: ID!): Todo!
