@@ -282,3 +282,6 @@ query-json
 
 npm i graphql
 npm i express-graphql
+
+
+ В инпутах можно указывать значение по умолчанию
