@@ -1,46 +1,7 @@
 const {buildSchema} = require('graphql')
+const path = require('path')
+const fs = require('fs')
 
-module.exports = buildSchema(`
-    type Step {
-        title: String!
-        completed: Boolean!
-    }
+const Schema = fs.readFileSync(path.resolve(__dirname, 'schema.gql'), 'utf-8')
 
-    """
-    Описание
-    """
-    type Todo {        
-        id: ID
-        "Название Задачи"
-        title: String!
-        completed: Boolean!
-        steps: [Step]
-    }
-
-    enum Status {
-        COMPLETED
-        UNCOMPLETED
-    }    
-
-    type Query {
-        todo(id: ID!): Todo!
-        todos(status: Status): [Todo]
-    }
-
-    input StepInput {
-        title: String!
-        completed: Boolean = false
-    }
-
-    input TodoInput {
-        title: String!
-        complited: Boolean = false
-        steps: [StepInput]
-    }
-
-    type Mutation {
-        createTodo(input: TodoInput!): Todo
-        updateTodo(id: ID!, input: TodoInput!): Todo
-        deleteTodo(id: ID!): ID
-    }
-`);
+module.exports = buildSchema(Schema);
